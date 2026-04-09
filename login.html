@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EduTrack Pro — Sign In</title>
+  <meta name="description" content="EduTrack Pro — Advanced Student Management System"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+<canvas id="particleCanvas"></canvas>
+<div id="toast" class="toast"></div>
+
+<div class="login-root">
+
+  <!-- LEFT: BRAND PANEL -->
+  <div class="brand-panel">
+    <div class="bp-inner">
+      <div class="bp-logo anim-item" style="--d:0s">
+        <div class="logo-hex">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        </div>
+        <div class="logo-text">
+          <span class="lt-main">EduTrack</span>
+          <span class="lt-badge">PRO</span>
+        </div>
+      </div>
+
+      <div class="bp-headline anim-item" style="--d:0.1s">
+        <p class="bp-kicker">STUDENT MANAGEMENT SYSTEM</p>
+        <h1>The future<br>of academic<br><span class="accent-text">administration.</span></h1>
+        <p class="bp-desc">Manage enrollments, track fee collections, monitor performance — all from a single intelligent platform built for modern institutions.</p>
+      </div>
+
+      <div class="bp-stats anim-item" style="--d:0.2s">
+        <div class="bs-item">
+          <span class="bs-num" data-count="1200">0</span>
+          <span class="bs-label">Students Managed</span>
+        </div>
+        <div class="bs-sep"></div>
+        <div class="bs-item">
+          <span class="bs-num" data-count="98">0</span><span class="bs-suffix">%</span>
+          <span class="bs-label">Collection Rate</span>
+        </div>
+        <div class="bs-sep"></div>
+        <div class="bs-item">
+          <span class="bs-num" data-count="3">0</span>
+          <span class="bs-label">Active Courses</span>
+        </div>
+      </div>
+
+      <!-- Floating preview cards -->
+      <div class="preview-cards anim-item" style="--d:0.3s">
+        <div class="pc pc1">
+          <div class="pc-dot green"></div>
+          <div class="pc-info">
+            <span class="pc-title">Fee Collected</span>
+            <span class="pc-val">₹2,34,500</span>
+          </div>
+          <svg width="32" height="32" viewBox="0 0 50 20"><polyline points="0,15 10,8 20,12 30,4 40,9 50,2" fill="none" stroke="#00d4ff" stroke-width="2"/></svg>
+        </div>
+        <div class="pc pc2">
+          <div class="pc-avatar">RS</div>
+          <div class="pc-info">
+            <span class="pc-title">New Enrollment</span>
+            <span class="pc-val">Riya Sharma · BCA</span>
+          </div>
+        </div>
+        <div class="pc pc3">
+          <div class="pc-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="pc-info">
+            <span class="pc-title">Attendance Today</span>
+            <span class="pc-val">87% — 142 present</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Decorative ring -->
+      <div class="deco-ring"></div>
+      <div class="deco-ring r2"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: LOGIN FORM -->
+  <div class="form-panel">
+    <div class="fp-inner">
+
+      <div class="fp-header anim-item" style="--d:0.1s">
+        <h2>Welcome back</h2>
+        <p>Sign in to your EduTrack Pro account to continue</p>
+      </div>
+
+      <div class="credential-chip anim-item" style="--d:0.15s">
+        <div class="chip-icon">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <span>Demo: <code>admin@edutrack.com</code> · <code>admin123</code></span>
+        <button class="chip-autofill" onclick="autofill()">Autofill</button>
+      </div>
+
+      <div class="login-form anim-item" style="--d:0.2s">
+
+        <div class="field-group" id="fg-email">
+          <label for="email">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Email Address
+          </label>
+          <div class="field-input-wrap">
+            <input type="email" id="email" placeholder="admin@edutrack.com" autocomplete="email"
+              oninput="clearFE('fg-email')"
+              onkeydown="if(event.key==='Enter')document.getElementById('password').focus()"/>
+            <div class="field-line"></div>
+          </div>
+          <span class="fe-msg" id="fe-email"></span>
+        </div>
+
+        <div class="field-group" id="fg-password">
+          <label for="password">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Password
+          </label>
+          <div class="field-input-wrap">
+            <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password"
+              oninput="clearFE('fg-password')"
+              onkeydown="if(event.key==='Enter')doLogin()"/>
+            <button type="button" class="eye-btn" onclick="togglePW()" id="eyeBtn">
+              <svg id="eyeSvg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+            <div class="field-line"></div>
+          </div>
+          <span class="fe-msg" id="fe-password"></span>
+        </div>
+
+        <div class="field-meta">
+          <label class="cb-label">
+            <input type="checkbox" id="rememberMe"/>
+            <span class="cb-box">
+              <svg width="9" height="9" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3" fill="none" stroke="#0a0c14" stroke-width="2.5"/></svg>
+            </span>
+            Remember me
+          </label>
+          <button type="button" class="forgot-btn" onclick="showForgot()">Forgot password?</button>
+        </div>
+
+        <button class="btn-signin" id="signinBtn" onclick="doLogin()">
+          <span id="signinLabel">Sign In</span>
+          <div class="btn-dots" id="btnDots"><span></span><span></span><span></span></div>
+          <div class="btn-arrow" id="btnArrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+        </button>
+
+        <div class="divider"><span>or continue with</span></div>
+
+        <div class="alt-logins">
+          <button class="alt-btn" onclick="showToast('Google SSO — Coming in v2.2','info')">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#EA4335" d="M5.27 9.76A7.08 7.08 0 0 1 12 4.9c1.69 0 3.22.6 4.41 1.59L19.82 3.1A11.94 11.94 0 0 0 12 0C7.31 0 3.26 2.7 1.28 6.64l3.99 3.12z"/><path fill="#34A853" d="M16.04 18.01A7.06 7.06 0 0 1 12 19.1c-2.9 0-5.39-1.74-6.61-4.27l-4.02 3.08A11.95 11.95 0 0 0 12 24c3.24 0 6.18-1.2 8.42-3.16l-4.38-2.83z"/><path fill="#4A90D9" d="M20.45 12.18c0-.74-.07-1.45-.19-2.14H12v4.05h4.73a4.1 4.1 0 0 1-1.75 2.7l4.38 2.83C21.29 17.57 22 15 22 12c0-.63-.04-1.23-.1-1.82h-1.45z"/><path fill="#FBBC05" d="M5.39 14.83A7.15 7.15 0 0 1 4.9 12c0-.98.17-1.93.48-2.79L1.28 6.1A11.94 11.94 0 0 0 0 12c0 1.93.46 3.75 1.28 5.36l4.11-2.53z"/></svg>
+            Google SSO
+          </button>
+          <button class="alt-btn" onclick="showToast('Microsoft SSO — Coming in v2.2','info')">
+            <svg width="16" height="16" viewBox="0 0 24 24"><rect x="1" y="1" width="10" height="10" fill="#F25022"/><rect x="13" y="1" width="10" height="10" fill="#7FBA00"/><rect x="1" y="13" width="10" height="10" fill="#00A4EF"/><rect x="13" y="13" width="10" height="10" fill="#FFB900"/></svg>
+            Microsoft
+          </button>
+        </div>
+
+      </div>
+
+      <p class="fp-footer">
+        By signing in you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
+        <br>Protected by EduTrack Security © 2025
+      </p>
+
+    </div>
+  </div>
+
+</div>
+
+<script src="login.js"></script>
+</body>
+</html>

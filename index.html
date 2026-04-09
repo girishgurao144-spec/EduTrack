@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EduTrack Pro — Dashboard</title>
+  <meta name="description" content="EduTrack Pro Student Management System"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    (function(){
+      const s = sessionStorage.getItem('et_session') || localStorage.getItem('et_session');
+      if (!s) { window.location.replace('login.html'); }
+    })();
+  </script>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<div id="toast" class="toast"></div>
+
+<!-- ══ SIDEBAR ══════════════════════════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-hex">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+    </div>
+    <div class="sb-brand-txt">
+      <span class="sb-name">EduTrack</span>
+      <span class="sb-tag">PRO v2.0</span>
+    </div>
+  </div>
+
+  <div class="sb-section-label">MAIN</div>
+  <nav class="sb-nav">
+    <a class="sn-item active" data-page="dashboard" onclick="goPage('dashboard')">
+      <div class="sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div>
+      <span>Dashboard</span>
+      <div class="sni-active-bar"></div>
+    </a>
+    <a class="sn-item" data-page="students" onclick="goPage('students')">
+      <div class="sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <span>Students</span>
+      <div class="sni-active-bar"></div>
+    </a>
+    <a class="sn-item" data-page="analytics" onclick="goPage('analytics')">
+      <div class="sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+      <span>Analytics</span>
+      <div class="sni-active-bar"></div>
+    </a>
+  </nav>
+
+  <div class="sb-section-label">COMING SOON</div>
+  <nav class="sb-nav">
+    <a class="sn-item sn-future" onclick="showFuture('Attendance Tracker')">
+      <div class="sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+      <span>Attendance</span>
+      <span class="future-chip">v2.1</span>
+    </a>
+    <a class="sn-item sn-future" onclick="showFuture('PDF Reports')">
+      <div class="sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+      <span>Reports</span>
+      <span class="future-chip">v2.1</span>
+    </a>
+    <a class="sn-item sn-future" onclick="showFuture('AI Grade Predictor')">
+      <div class="sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+      <span>AI Insights</span>
+      <span class="future-chip ai">v2.2</span>
+    </a>
+    <a class="sn-item sn-future" onclick="showFuture('Notifications Center')">
+      <div class="sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+      <span>Notifications</span>
+      <span class="future-chip">v2.2</span>
+    </a>
+    <a class="sn-item sn-future" onclick="showFuture('Cloud Sync via Firebase')">
+      <div class="sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+      <span>Cloud Sync</span>
+      <span class="future-chip">v3.0</span>
+    </a>
+  </nav>
+
+  <div class="sb-footer">
+    <div class="sb-user" id="sbUser">
+      <div class="sb-avatar" id="sbAvatar">AU</div>
+      <div class="sb-uinfo">
+        <span id="sbName">Admin</span>
+        <span id="sbRole">Super Admin</span>
+      </div>
+    </div>
+    <button class="sb-logout" onclick="doLogout()" title="Logout">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </button>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══════════════════════════════════════ -->
+<div class="main-wrap" id="mainWrap">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="tb-left">
+      <button class="hamburger" id="hamburger" onclick="toggleSidebar()">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="tb-breadcrumb">
+        <span class="tbc-root">EduTrack Pro</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="tbc-page" id="tbPage">Dashboard</span>
+      </div>
+    </div>
+    <div class="tb-center">
+      <div class="tb-search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="globalSearch" placeholder="Search students, IDs, courses…" oninput="onGlobalSearch()"/>
+        <span class="search-kbd">⌘K</span>
+      </div>
+    </div>
+    <div class="tb-right">
+      <button class="tb-icon-btn" onclick="exportCSV()" title="Export CSV">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </button>
+      <button class="tb-icon-btn theme-btn" onclick="toggleTheme()" title="Toggle theme" id="themeBtn">
+        <svg id="themeIco" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <div class="tb-profile">
+        <div class="tbp-avatar" id="tbpAvatar">AU</div>
+        <div class="tbp-info">
+          <span id="tbpName">Admin</span>
+          <span id="tbpRole">Super Admin</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="content-area" id="contentArea">
+
+    <!-- ═══ PAGE: DASHBOARD ═══ -->
+    <section class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div class="ph-left">
+          <h1>Dashboard <span class="live-dot"></span></h1>
+          <p>Real-time overview of your institution's performance</p>
+        </div>
+        <div class="ph-right">
+          <div class="date-chip" id="datechip"></div>
+        </div>
+      </div>
+
+      <!-- KPI CARDS -->
+      <div class="kpi-grid">
+        <div class="kpi-card kc-cyan">
+          <div class="kc-top">
+            <div class="kc-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <span class="kc-trend up" id="kc-trend-students">↑ 0%</span>
+          </div>
+          <div class="kc-val" id="kv-students">0</div>
+          <div class="kc-label">Total Students</div>
+          <div class="kc-bar-wrap"><div class="kc-bar" id="kb-students"></div></div>
+        </div>
+        <div class="kpi-card kc-green">
+          <div class="kc-top">
+            <div class="kc-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <span class="kc-trend up" id="kc-trend-total">₹0 total</span>
+          </div>
+          <div class="kc-val mono" id="kv-total">₹0</div>
+          <div class="kc-label">Total Fees</div>
+          <div class="kc-bar-wrap"><div class="kc-bar" id="kb-total"></div></div>
+        </div>
+        <div class="kpi-card kc-amber">
+          <div class="kc-top">
+            <div class="kc-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <span class="kc-trend up" id="kc-trend-paid">0%</span>
+          </div>
+          <div class="kc-val mono" id="kv-paid">₹0</div>
+          <div class="kc-label">Fees Collected</div>
+          <div class="kc-bar-wrap"><div class="kc-bar" id="kb-paid"></div></div>
+        </div>
+        <div class="kpi-card kc-red">
+          <div class="kc-top">
+            <div class="kc-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <span class="kc-trend down" id="kc-trend-balance">0%</span>
+          </div>
+          <div class="kc-val mono" id="kv-balance">₹0</div>
+          <div class="kc-label">Balance Due</div>
+          <div class="kc-bar-wrap"><div class="kc-bar" id="kb-balance"></div></div>
+        </div>
+      </div>
+
+      <!-- CHARTS + ACTIVITY -->
+      <div class="dash-mid">
+        <div class="chart-card cc-wide">
+          <div class="cc-header">
+            <h3>Fee Collection — Monthly</h3>
+            <div class="cc-legend">
+              <span class="leg-dot green"></span><span>Collected</span>
+              <span class="leg-dot red"></span><span>Balance</span>
+            </div>
+          </div>
+          <div class="chart-wrap"><canvas id="barChart"></canvas></div>
+        </div>
+        <div class="chart-card cc-narrow">
+          <div class="cc-header"><h3>Course Distribution</h3></div>
+          <div class="chart-wrap doughnut-wrap"><canvas id="doughnutChart"></canvas></div>
+          <div class="doughnut-legend" id="dLegend"></div>
+        </div>
+      </div>
+
+      <!-- COLLECTION PROGRESS + ACTIVITY -->
+      <div class="dash-bottom">
+        <div class="progress-panel">
+          <h3 class="pp-title">Collection Summary</h3>
+          <div class="pp-rate">
+            <span class="ppr-num" id="pprNum">0%</span>
+            <span class="ppr-label">Collection Rate</span>
+          </div>
+          <div class="big-bar-wrap"><div class="big-bar" id="bigBar" style="width:0%"></div></div>
+          <div class="course-breakdown" id="courseBreakdown"></div>
+        </div>
+        <div class="activity-panel">
+          <div class="ap-header">
+            <h3>Recent Activity</h3>
+            <button class="ap-clear" onclick="clearActivity()">Clear</button>
+          </div>
+          <div class="activity-list" id="activityList">
+            <div class="act-empty">No recent activity</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ PAGE: STUDENTS ═══ -->
+    <section class="page" id="page-students">
+      <div class="page-header">
+        <div class="ph-left">
+          <h1>Students</h1>
+          <p>Manage enrollments, fees and student records</p>
+        </div>
+        <div class="ph-right">
+          <button class="btn-primary" onclick="scrollToForm()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Student
+          </button>
+        </div>
+      </div>
+
+      <!-- FORM -->
+      <div class="form-panel" id="studentForm">
+        <div class="fp-hdr">
+          <div class="fp-hdr-left">
+            <div class="form-status-dot" id="formStatusDot"></div>
+            <h3 id="formHeading">New Student</h3>
+            <span class="form-mode-tag" id="formModeTag">ADD</span>
+          </div>
+          <button class="btn-ghost-sm" onclick="resetForm()">Reset</button>
+        </div>
+
+        <div class="form-grid">
+          <div class="fg" id="fge-id">
+            <label>Student ID <span class="req">*</span></label>
+            <input type="text" id="f-id" placeholder="e.g. STU-001"/>
+            <span class="fge-err" id="err-id"></span>
+          </div>
+          <div class="fg" id="fge-name">
+            <label>Full Name <span class="req">*</span></label>
+            <input type="text" id="f-name" placeholder="John Doe"/>
+            <span class="fge-err" id="err-name"></span>
+          </div>
+          <div class="fg fg-wide" id="fge-address">
+            <label>Address</label>
+            <input type="text" id="f-address" placeholder="123 Street, City, State"/>
+          </div>
+          <div class="fg" id="fge-phone">
+            <label>Phone <span class="req">*</span></label>
+            <input type="tel" id="f-phone" placeholder="+91 98765 43210"/>
+            <span class="fge-err" id="err-phone"></span>
+          </div>
+          <div class="fg" id="fge-email">
+            <label>Email <span class="req">*</span></label>
+            <input type="email" id="f-email" placeholder="student@email.com"/>
+            <span class="fge-err" id="err-email"></span>
+          </div>
+          <div class="fg" id="fge-course">
+            <label>Course <span class="req">*</span></label>
+            <select id="f-course" onchange="onCourseChange()">
+              <option value="">— Select Course —</option>
+              <option value="BCA">BCA — Computer Applications</option>
+              <option value="BBA">BBA — Business Administration</option>
+              <option value="BCOM">BCOM — Bachelor of Commerce</option>
+            </select>
+            <span class="fge-err" id="err-course"></span>
+          </div>
+          <div class="fg">
+            <label>Total Fees</label>
+            <input type="text" id="f-total" readonly placeholder="Auto-filled on course select"/>
+          </div>
+          <div class="fg" id="fge-paid">
+            <label>Fees Paid (₹) <span class="req">*</span></label>
+            <input type="number" id="f-paid" placeholder="0" min="0" oninput="calcBalance()"/>
+            <span class="fge-err" id="err-paid"></span>
+          </div>
+          <div class="fg">
+            <label>Balance Fees</label>
+            <input type="text" id="f-balance" readonly placeholder="Auto-calculated"/>
+          </div>
+          <div class="fg">
+            <label>Year of Admission</label>
+            <select id="f-year">
+              <option value="2025">2025</option>
+              <option value="2024">2024</option>
+              <option value="2023">2023</option>
+              <option value="2022">2022</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Status</label>
+            <select id="f-status">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+              <option value="Graduated">Graduated</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-primary" id="btn-add" onclick="addStudent()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Student
+          </button>
+          <button class="btn-accent" id="btn-update" onclick="updateStudent()" style="display:none">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Update Student
+          </button>
+          <button class="btn-ghost-sm" id="btn-cancel" onclick="cancelEdit()" style="display:none">Cancel Edit</button>
+        </div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="table-panel">
+        <div class="tp-header">
+          <div class="tp-title">
+            <h3>All Students</h3>
+            <span class="count-tag" id="countTag">0</span>
+          </div>
+          <div class="tp-controls">
+            <div class="filter-row">
+              <select id="flt-course" onchange="applyFilters()">
+                <option value="">All Courses</option>
+                <option value="BCA">BCA</option>
+                <option value="BBA">BBA</option>
+                <option value="BCOM">BCOM</option>
+              </select>
+              <select id="flt-status" onchange="applyFilters()">
+                <option value="">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="Graduated">Graduated</option>
+              </select>
+              <select id="flt-year" onchange="applyFilters()">
+                <option value="">All Years</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+              </select>
+              <button class="btn-ghost-sm" onclick="clearFilters()">Reset</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-scroller">
+          <table>
+            <thead>
+              <tr>
+                <th onclick="sortBy('id')" class="sortable">ID <span class="sort-ico" id="si-id">↕</span></th>
+                <th onclick="sortBy('name')" class="sortable">Name <span class="sort-ico" id="si-name">↕</span></th>
+                <th>Course</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Year</th>
+                <th>Status</th>
+                <th onclick="sortBy('feesPaid')" class="sortable">Paid <span class="sort-ico" id="si-feesPaid">↕</span></th>
+                <th onclick="sortBy('balance')" class="sortable">Balance <span class="sort-ico" id="si-balance">↕</span></th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="studentTbody">
+              <tr id="emptyTr">
+                <td colspan="10">
+                  <div class="tbl-empty">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <p>No students yet. Add your first student above!</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="tp-footer">
+          <span class="tpf-info" id="tpfInfo">Showing 0 of 0 students</span>
+          <div class="pagination" id="pagination"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ PAGE: ANALYTICS ═══ -->
+    <section class="page" id="page-analytics">
+      <div class="page-header">
+        <div class="ph-left">
+          <h1>Analytics</h1>
+          <p>Deep insights into enrollment and fee performance</p>
+        </div>
+      </div>
+
+      <div class="analytics-grid">
+        <div class="chart-card">
+          <div class="cc-header"><h3>Fees Paid vs Balance by Course</h3></div>
+          <div class="chart-wrap"><canvas id="courseCompareChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="cc-header"><h3>Student Enrollment by Year</h3></div>
+          <div class="chart-wrap"><canvas id="yearChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="cc-header"><h3>Payment Status Breakdown</h3></div>
+          <div class="chart-wrap doughnut-wrap"><canvas id="statusChart"></canvas></div>
+        </div>
+        <div class="anl-summary-card">
+          <h3>Quick Summary</h3>
+          <div class="anl-rows" id="anlRows"></div>
+        </div>
+      </div>
+
+      <!-- FUTURE FEATURES TEASER -->
+      <div class="future-section">
+        <div class="fs-header">
+          <div class="fs-badge">ROADMAP</div>
+          <h3>Upcoming in EduTrack Pro</h3>
+          <p>Features currently in development — stay tuned!</p>
+        </div>
+        <div class="future-grid">
+          <div class="future-card">
+            <div class="fc-icon cyan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg></div>
+            <div class="fc-content">
+              <h4>Attendance Tracker</h4>
+              <p>Daily/weekly attendance with visual calendar, auto-SMS alerts to parents, and defaulter lists.</p>
+              <span class="fc-version">v2.1 — Q3 2025</span>
+            </div>
+          </div>
+          <div class="future-card">
+            <div class="fc-icon green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+            <div class="fc-content">
+              <h4>PDF Report Generator</h4>
+              <p>One-click fee receipts, progress reports, and bulk export with your institution's letterhead.</p>
+              <span class="fc-version">v2.1 — Q3 2025</span>
+            </div>
+          </div>
+          <div class="future-card fc-highlight">
+            <div class="fc-icon amber"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+            <div class="fc-content">
+              <h4>AI Grade Predictor</h4>
+              <p>Machine learning model predicts student performance and identifies at-risk students early using attendance + fee patterns.</p>
+              <span class="fc-version">v2.2 — Q4 2025</span>
+            </div>
+            <div class="fc-ai-badge">AI</div>
+          </div>
+          <div class="future-card">
+            <div class="fc-icon purple"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+            <div class="fc-content">
+              <h4>Email & SMS Notifications</h4>
+              <p>Auto reminders for fee due dates, attendance alerts, and exam schedules sent directly to students and parents.</p>
+              <span class="fc-version">v2.2 — Q4 2025</span>
+            </div>
+          </div>
+          <div class="future-card">
+            <div class="fc-icon blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+            <div class="fc-content">
+              <h4>Progressive Web App (PWA)</h4>
+              <p>Install EduTrack Pro on any device. Full offline mode with background sync when reconnected.</p>
+              <span class="fc-version">v2.3 — Q1 2026</span>
+            </div>
+          </div>
+          <div class="future-card">
+            <div class="fc-icon red"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+            <div class="fc-content">
+              <h4>Firebase Cloud Sync</h4>
+              <p>Real-time multi-device sync, cloud backup, and role-based access for staff, teachers, and admins.</p>
+              <span class="fc-version">v3.0 — Q2 2026</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /content-area -->
+</div><!-- /main-wrap -->
+
+<!-- ══ CHATBOT ══════════════════════════════════ -->
+<div class="chatbot-root" id="chatbotRoot">
+  <div class="chat-window" id="chatWindow">
+    <div class="cw-header">
+      <div class="cw-avatar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      </div>
+      <div>
+        <div class="cw-name">EduBot</div>
+        <div class="cw-online"><span></span>Online</div>
+      </div>
+      <button class="cw-close" onclick="toggleChat()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="cw-messages" id="cwMessages">
+      <div class="cw-msg bot"><div class="cwm-bubble">👋 Hi! I'm EduBot — your EduTrack assistant. How can I help you today?</div></div>
+      <div class="cw-chips" id="cwChips">
+        <button onclick="botQ('How to add student?')">Add student</button>
+        <button onclick="botQ('How to update data?')">Update data</button>
+        <button onclick="botQ('What is balance fees?')">Balance fees</button>
+        <button onclick="botQ('How to export CSV?')">Export CSV</button>
+        <button onclick="botQ('How to delete student?')">Delete student</button>
+        <button onclick="botQ('What courses are available?')">Courses</button>
+      </div>
+    </div>
+    <div class="cw-input">
+      <input id="cwInput" type="text" placeholder="Ask EduBot anything…" onkeydown="if(event.key==='Enter')sendBot()"/>
+      <button onclick="sendBot()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+  <button class="chat-fab" id="chatFab" onclick="toggleChat()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <div class="fab-ring"></div>
+    <span class="fab-badge" id="fabBadge">1</span>
+  </button>
+</div>
+
+<!-- ══ FUTURE MODAL ════════════════════════════ -->
+<div class="modal-overlay" id="futureModal" onclick="closeFutureModal(event)">
+  <div class="modal-box">
+    <div class="mb-icon">🚀</div>
+    <h3 id="mbTitle">Coming Soon</h3>
+    <p id="mbDesc">This feature is actively being developed and will be available in an upcoming release.</p>
+    <div class="mb-actions">
+      <button class="btn-primary" onclick="document.getElementById('futureModal').classList.remove('open')">Got it</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
